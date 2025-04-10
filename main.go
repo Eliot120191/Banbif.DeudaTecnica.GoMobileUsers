@@ -15,8 +15,10 @@ import (
 )
 
 func main() {
-
-	_ = godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	l := bootstrap.InitLogger()
 
 	db, err := bootstrap.DBConnection()
