@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers/internal/users"
+	"github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers/internal/usuario"
 	"github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers/pkg/bootstrap"
 	"github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers/pkg/handler"
 	"github.com/joho/godotenv"
@@ -32,9 +32,9 @@ func main() {
 	}
 
 	ctx := context.Background()
-	userRepo := users.NewRepo(l, db)
-	userSrv := users.NewService(l, userRepo)
-	h := handler.NewUserHTTPServer(ctx, users.MakeEndpoints(userSrv, users.Config{LimPageDef: pagLimDef}))
+	usuarioRepo := usuario.NewRepo(l, db)
+	usuarioSrv := usuario.NewService(l, usuarioRepo)
+	h := handler.NewUserHTTPServer(ctx, usuario.MakeEndpoints(usuarioSrv, usuario.Config{LimPageDef: pagLimDef}))
 
 	port := os.Getenv("PORT")
 	address := fmt.Sprintf("127.0.0.1:%s", port)

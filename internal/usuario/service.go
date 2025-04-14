@@ -1,4 +1,4 @@
-package users
+package usuario
 
 import (
 	"context"
@@ -14,12 +14,13 @@ type (
 	}
 
 	Service interface {
+		LoginAsync(ctx context.Context, correo string) (interface{}, error)
 		//Create(ctx context.Context, firstName, lastName, email, phone string) (*domain.USUARIO, error)
-		Get(ctx context.Context, id int64) (*domain.USUARIO, error)
+		/*Get(ctx context.Context, id int64) (*domain.USUARIO, error)
 		GetAll(ctx context.Context, filters Filters, offset, limit int) ([]domain.USUARIO, error)
 		Delete(ctx context.Context, id int64) error
 		Update(ctx context.Context, id int64, firstName *string) error
-		Count(ctx context.Context, filters Filters) (int, error)
+		Count(ctx context.Context, filters Filters) (int, error)*/
 	}
 	service struct {
 		log  *log.Logger
@@ -32,6 +33,16 @@ func NewService(log *log.Logger, repo Repository) Service {
 		log:  log,
 		repo: repo,
 	}
+}
+
+func (s service) LoginAsync(ctx context.Context, correo string) (interface{}, error) {
+	user := domain.USUARIO{}
+
+	if err := s.repo.LoginAsync(ctx, &user); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 /*
@@ -49,7 +60,7 @@ func (s service) Create(ctx context.Context, firstName, lastName, email, phone s
 
 	return &user, nil
 }*/
-
+/*
 func (s service) GetAll(ctx context.Context, filters Filters, offset, limit int) ([]domain.USUARIO, error) {
 
 	users, err := s.repo.GetAll(ctx, filters, offset, limit)
@@ -78,3 +89,4 @@ func (s service) Update(ctx context.Context, id int64, firstName *string) error 
 func (s service) Count(ctx context.Context, filters Filters) (int, error) {
 	return s.repo.Count(ctx, filters)
 }
+*/

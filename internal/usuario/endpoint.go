@@ -1,50 +1,55 @@
-package users
+package usuario
 
 import (
 	"context"
-	"errors"
+	"net/http"
 
-	"github.com/ncostamagna/go_lib_response/response"
-	"github.com/ncostamagna/gocourse_meta/meta"
+	"github.com/Eliot120191/Banbif.DeudaTecnica.GoDomain/meta"
+	"github.com/Eliot120191/Banbif.DeudaTecnica.GoDomain/response"
 )
 
 type (
 	Controller func(ctx context.Context, request interface{}) (interface{}, error)
 
 	Endpoints struct {
-		Create Controller
-		Get    Controller
-		GetAll Controller
-		Update Controller
-		Delete Controller
+		LoginAsync Controller
+		/*Create     Controller
+		Get        Controller
+		GetAll     Controller
+		Update     Controller
+		Delete     Controller*/
 	}
 
-	CreateReq struct {
-		FirstName string `json:"first_name"`
-		LastName  string `json:"last_name"`
-		Email     string `json:"email"`
-		Phone     string `json:"phone"`
+	LoginAsyncRequest struct {
+		Correo string `json:"correo"`
 	}
+	/*
+		CreateReq struct {
+			FirstName string `json:"first_name"`
+			LastName  string `json:"last_name"`
+			Email     string `json:"email"`
+			Phone     string `json:"phone"`
+		}
 
-	GetReq struct {
-		ID int64
-	}
+		GetReq struct {
+			ID int64
+		}
 
-	GetAllReq struct {
-		FirstName string
-		LastName  string
-		Limit     int
-		Page      int
-	}
+		GetAllReq struct {
+			FirstName string
+			LastName  string
+			Limit     int
+			Page      int
+		}
 
-	UpdateReq struct {
-		ID     int64
-		Correo *string `json:"correo"`
-	}
+		UpdateReq struct {
+			ID     int64
+			Correo *string `json:"correo"`
+		}
 
-	DeleteReq struct {
-		ID int64
-	}
+		DeleteReq struct {
+			ID int64
+		}*/
 
 	Response struct {
 		Status int         `json:"status"`
@@ -61,11 +66,12 @@ type (
 func MakeEndpoints(s Service, config Config) Endpoints {
 
 	return Endpoints{
+		LoginAsync: makeLoginAsyncEndpoint(s),
 		//Create: makeCreateEndpoint(s),
-		Get:    makeGetEndpoint(s),
+		/*Get:    makeGetEndpoint(s),
 		GetAll: makeGetAllEndpoint(s, config),
 		Update: makeUpdateEndpoint(s),
-		Delete: makeDeleteEndpoint(s),
+		Delete: makeDeleteEndpoint(s),*/
 	}
 
 }
@@ -93,6 +99,20 @@ func MakeEndpoints(s Service, config Config) Endpoints {
 		}
 	}
 */
+func makeLoginAsyncEndpoint(s Service) Controller {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LoginAsyncRequest)
+
+		res, err := s.LoginAsync(ctx, req.Correo)
+		if err != nil {
+			return response.Error(err.Error(), http.StatusInternalServerError, nil), nil
+		}
+
+		return response.Success(0, "", res), nil
+	}
+}
+
+/*
 func makeGetAllEndpoint(s Service, config Config) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 
@@ -176,3 +196,4 @@ func makeDeleteEndpoint(s Service) Controller {
 		return response.OK("success", nil, nil), nil
 	}
 }
+*/

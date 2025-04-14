@@ -1,4 +1,4 @@
-package users
+package usuario
 
 import (
 	"context"
@@ -11,12 +11,14 @@ import (
 )
 
 type Repository interface {
-	Create(ctx context.Context, user *domain.USUARIO) error
-	GetAll(ctx context.Context, filters Filters, offset, limit int) ([]domain.USUARIO, error)
-	Get(ctx context.Context, id int64) (*domain.USUARIO, error)
-	Delete(ctx context.Context, id int64) error
-	Update(ctx context.Context, id int64, correo *string) error
-	Count(ctx context.Context, filters Filters) (int, error)
+	LoginAsync(ctx context.Context, user *domain.USUARIO) error
+	/*
+		Create(ctx context.Context, user *domain.USUARIO) error
+		GetAll(ctx context.Context, filters Filters, offset, limit int) ([]domain.USUARIO, error)
+		Get(ctx context.Context, id int64) (*domain.USUARIO, error)
+		Delete(ctx context.Context, id int64) error
+		Update(ctx context.Context, id int64, correo *string) error
+		Count(ctx context.Context, filters Filters) (int, error)*/
 }
 
 type repo struct {
@@ -31,12 +33,24 @@ func NewRepo(log *log.Logger, db *gorm.DB) Repository {
 	}
 }
 
+func (repo *repo) LoginAsync(ctx context.Context, user *domain.USUARIO) error {
+	repo.log.Println("Lino")
+
+	if err := repo.db.WithContext(ctx).Create(user).Error; err != nil {
+		repo.log.Println(err)
+		return err
+	}
+	repo.log.Println("user created with id: ", user.BASE.ID)
+	return nil
+}
+
+/*
 func (repo *repo) Create(ctx context.Context, user *domain.USUARIO) error {
 	if err := repo.db.WithContext(ctx).Create(user).Error; err != nil {
 		repo.log.Println(err)
 		return err
 	}
-	repo.log.Println("user created with id: ", user.ID)
+	repo.log.Println("user created with id: ", user.BASE.ID)
 	return nil
 }
 
@@ -56,7 +70,7 @@ func (repo *repo) GetAll(ctx context.Context, filters Filters, offset, limit int
 }
 
 func (repo *repo) Get(ctx context.Context, id int64) (*domain.USUARIO, error) {
-	user := domain.USUARIO{ID: id}
+	user := domain.USUARIO{BASE: domain.BASE{ID: id}}
 
 	if err := repo.db.WithContext(ctx).First(&user).Error; err != nil {
 		repo.log.Println(err)
@@ -69,7 +83,7 @@ func (repo *repo) Get(ctx context.Context, id int64) (*domain.USUARIO, error) {
 }
 
 func (repo *repo) Delete(ctx context.Context, id int64) error {
-	user := domain.USUARIO{ID: id}
+	user := domain.USUARIO{BASE: domain.BASE{ID: id}}
 
 	result := repo.db.WithContext(ctx).Delete(&user)
 
@@ -106,7 +120,7 @@ func (repo *repo) Update(ctx context.Context, id int64, correo *string) error {
 	}
 
 	return nil
-}
+}*/
 
 func (repo *repo) Count(ctx context.Context, filters Filters) (int, error) {
 	var count int64

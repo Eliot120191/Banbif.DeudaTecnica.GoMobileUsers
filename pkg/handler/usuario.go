@@ -3,18 +3,16 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers/internal/users"
+	"github.com/Eliot120191/Banbif.DeudaTecnica.GoDomain/response"
+	"github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers/internal/usuario"
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
-	"github.com/ncostamagna/go_lib_response/response"
 )
 
-func NewUserHTTPServer(ctx context.Context, endpoints users.Endpoints) http.Handler {
+func NewUserHTTPServer(ctx context.Context, endpoints usuario.Endpoints) http.Handler {
 
 	r := mux.NewRouter()
 
@@ -22,43 +20,57 @@ func NewUserHTTPServer(ctx context.Context, endpoints users.Endpoints) http.Hand
 		httptransport.ServerErrorEncoder(encodeError),
 	}
 
-	r.Handle("/users", httptransport.NewServer(
-		endpoint.Endpoint(endpoints.Create),
-		decodeCreateUser, encodeResponse,
+	r.Handle("/appmobile-users/v1/usuario", httptransport.NewServer(
+		endpoint.Endpoint(endpoints.LoginAsync),
+		decodeLoginAsync, encodeResponse,
 		opts...,
 	)).Methods("POST")
+	/*
+		r.Handle("/users", httptransport.NewServer(
+			endpoint.Endpoint(endpoints.Create),
+			decodeCreateUser, encodeResponse,
+			opts...,
+		)).Methods("POST")
 
-	r.Handle("/users", httptransport.NewServer(
-		endpoint.Endpoint(endpoints.GetAll),
-		decodeGetAllUser,
-		encodeResponse,
-		opts...,
-	)).Methods("GET")
+		r.Handle("/users", httptransport.NewServer(
+			endpoint.Endpoint(endpoints.GetAll),
+			decodeGetAllUser,
+			encodeResponse,
+			opts...,
+		)).Methods("GET")
 
-	r.Handle("/users/{id}", httptransport.NewServer(
-		endpoint.Endpoint(endpoints.Get),
-		decodeGetUser,
-		encodeResponse,
-		opts...,
-	)).Methods("GET")
+		r.Handle("/users/{id}", httptransport.NewServer(
+			endpoint.Endpoint(endpoints.Get),
+			decodeGetUser,
+			encodeResponse,
+			opts...,
+		)).Methods("GET")
 
-	r.Handle("/users/{id}", httptransport.NewServer(
-		endpoint.Endpoint(endpoints.Update),
-		decodeUpdateUser,
-		encodeResponse,
-		opts...,
-	)).Methods("PATCH")
+		r.Handle("/users/{id}", httptransport.NewServer(
+			endpoint.Endpoint(endpoints.Update),
+			decodeUpdateUser,
+			encodeResponse,
+			opts...,
+		)).Methods("PATCH")
 
-	r.Handle("/users/{id}", httptransport.NewServer(
-		endpoint.Endpoint(endpoints.Delete),
-		decodeDeleteUser,
-		encodeResponse,
-		opts...,
-	)).Methods("DELETE")
-
+		r.Handle("/users/{id}", httptransport.NewServer(
+			endpoint.Endpoint(endpoints.Delete),
+			decodeDeleteUser,
+			encodeResponse,
+			opts...,
+		)).Methods("DELETE")
+	*/
 	return r
 }
 
+func decodeLoginAsync(_ context.Context, r *http.Request) (interface{}, error) {
+
+	var req usuario.LoginAsyncRequest
+
+	return req, nil
+}
+
+/*
 func decodeCreateUser(_ context.Context, r *http.Request) (interface{}, error) {
 
 	var req users.CreateReq
@@ -120,7 +132,7 @@ func decodeDeleteUser(_ context.Context, r *http.Request) (interface{}, error) {
 	}
 
 	return req, nil
-}
+}*/
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, resp interface{}) error {
 	r := resp.(response.Response)
