@@ -3,7 +3,7 @@ module github.com/Eliot120191/Banbif.DeudaTecnica.GoMobileUsers
 go 1.24.2
 
 require (
-	github.com/Eliot120191/Banbif.DeudaTecnica.GoDomain v0.0.19
+	github.com/Eliot120191/Banbif.DeudaTecnica.GoDomain v0.0.24
 	github.com/go-kit/kit v0.13.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1

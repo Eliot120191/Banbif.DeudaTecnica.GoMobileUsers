@@ -13,43 +13,11 @@ type (
 
 	Endpoints struct {
 		LoginAsync Controller
-		/*Create     Controller
-		Get        Controller
-		GetAll     Controller
-		Update     Controller
-		Delete     Controller*/
 	}
 
 	LoginAsyncRequest struct {
 		Correo string `json:"correo"`
 	}
-	/*
-		CreateReq struct {
-			FirstName string `json:"first_name"`
-			LastName  string `json:"last_name"`
-			Email     string `json:"email"`
-			Phone     string `json:"phone"`
-		}
-
-		GetReq struct {
-			ID int64
-		}
-
-		GetAllReq struct {
-			FirstName string
-			LastName  string
-			Limit     int
-			Page      int
-		}
-
-		UpdateReq struct {
-			ID     int64
-			Correo *string `json:"correo"`
-		}
-
-		DeleteReq struct {
-			ID int64
-		}*/
 
 	Response struct {
 		Status int         `json:"status"`
@@ -67,11 +35,6 @@ func MakeEndpoints(s Service, config Config) Endpoints {
 
 	return Endpoints{
 		LoginAsync: makeLoginAsyncEndpoint(s),
-		//Create: makeCreateEndpoint(s),
-		/*Get:    makeGetEndpoint(s),
-		GetAll: makeGetAllEndpoint(s, config),
-		Update: makeUpdateEndpoint(s),
-		Delete: makeDeleteEndpoint(s),*/
 	}
 
 }

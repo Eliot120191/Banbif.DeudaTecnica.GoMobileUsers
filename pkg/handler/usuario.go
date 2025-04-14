@@ -66,6 +66,9 @@ func NewUserHTTPServer(ctx context.Context, endpoints usuario.Endpoints) http.Ha
 func decodeLoginAsync(_ context.Context, r *http.Request) (interface{}, error) {
 
 	var req usuario.LoginAsyncRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }

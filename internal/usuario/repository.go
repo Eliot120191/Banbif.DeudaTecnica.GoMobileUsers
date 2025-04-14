@@ -11,7 +11,7 @@ import (
 )
 
 type Repository interface {
-	LoginAsync(ctx context.Context, user *domain.USUARIO) error
+	LoginAsync(ctx context.Context, correo string) error
 	/*
 		Create(ctx context.Context, user *domain.USUARIO) error
 		GetAll(ctx context.Context, filters Filters, offset, limit int) ([]domain.USUARIO, error)
@@ -33,14 +33,22 @@ func NewRepo(log *log.Logger, db *gorm.DB) Repository {
 	}
 }
 
-func (repo *repo) LoginAsync(ctx context.Context, user *domain.USUARIO) error {
-	repo.log.Println("Lino")
-
-	if err := repo.db.WithContext(ctx).Create(user).Error; err != nil {
+func (repo *repo) LoginAsync(ctx context.Context, correo string) error {
+	var user = domain.USUARIO{Correo: correo}
+	if err := repo.db.WithContext(ctx).First(&user).Error; err != nil {
 		repo.log.Println(err)
-		return err
+		if err == gorm.ErrRecordNotFound {
+			return ErrNotFound{"error"}
+		}
+		return nil
 	}
-	repo.log.Println("user created with id: ", user.BASE.ID)
+
+	/*
+		if err := repo.db.WithContext(ctx).Create(user).Error; err != nil {
+			repo.log.Println(err)
+			return err
+		}
+		repo.log.Println("user created with id: ", user.BASE.ID)*/
 	return nil
 }
 

@@ -3,8 +3,6 @@ package usuario
 import (
 	"context"
 	"log"
-
-	"github.com/Eliot120191/Banbif.DeudaTecnica.GoDomain/domain"
 )
 
 type (
@@ -36,13 +34,11 @@ func NewService(log *log.Logger, repo Repository) Service {
 }
 
 func (s service) LoginAsync(ctx context.Context, correo string) (interface{}, error) {
-	user := domain.USUARIO{}
-
-	if err := s.repo.LoginAsync(ctx, &user); err != nil {
+	if err := s.repo.LoginAsync(ctx, correo); err != nil {
 		return nil, err
 	}
 
-	return &user, nil
+	return nil, nil
 }
 
 /*
